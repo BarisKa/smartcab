@@ -42,7 +42,7 @@ class LearningAgent(Agent):
         # If 'testing' is True, set epsilon and alpha to 0
         #self.epsilon = self.epsilon - 0.05 For defauld
         if testing == False : 
-			self.epsilon = math.exp(-1 * self.a * self.t)
+			self.epsilon = math.exp(-1 * self.a * self.t) #self.epsilon = self.epsilon - 0.05 
 			self.t = self.t + 1
         else :
             self.epsilon = 0
@@ -67,7 +67,7 @@ class LearningAgent(Agent):
         #   If it is not, create a dictionary in the Q-table for the current 'state'
         #   For each action, set the Q-value for the state-action pair to 0
         
-        state = (waypoint, inputs['light'], inputs['oncoming'], inputs['left'], inputs['right'])
+        state = (waypoint, inputs['light'], inputs['oncoming']) #, inputs['left'], inputs['right'])
         self.createQ(state)
         return state
 
@@ -139,7 +139,8 @@ class LearningAgent(Agent):
         # When learning, implement the value iteration update rule
         #   Use only the learning rate 'alpha' (do not use the discount factor 'gamma')
         if self.learning == True:
-			self.Q[state][action] = reward + self.alpha * self.get_maxQ(state)
+			self.Q[state][action] = (1 - self.alpha) * self.Q[state][action] + (self.alpha * reward)
+			#self.Q[state][action] = reward + self.alpha * self.get_maxQ(state)
         return
 
 
@@ -190,7 +191,7 @@ def run():
     #   display      - set to False to disable the GUI if PyGame is enabled
     #   log_metrics  - set to True to log trial and simulation results to /logs
     #   optimized    - set to True to change the default log file name
-    sim = Simulator(env, update_delay=0.01, display=True, log_metrics=True, optimized=True)
+    sim = Simulator(env, update_delay=0.01, display=True, log_metrics=True , optimized=True)
     
     ##############
     # Run the simulator
